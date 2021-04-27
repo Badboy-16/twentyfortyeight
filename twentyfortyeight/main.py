@@ -105,7 +105,7 @@ class Board:
         new_pos = dict()
         for key in self.position:
             new_pos[key] = self.position[key]
-        if direction == 'u':
+        if direction == 'u' or direction == 'd':
             for col_num in range(1, 5):
                 tiles = list()
                 for key in self.position:
@@ -127,10 +127,19 @@ class Board:
                            (2, col_num): 0,
                            (3, col_num): 0,
                            (4, col_num): 0}
-                index = 0
-                for tile in rem_tiles:
-                    new_col[(index + 1, col_num)] = rem_tiles[index]
-                    index += 1
+
+                if direction == 'u':
+                    index = 0
+                    for tile in rem_tiles:
+                        new_col[(index + 1, col_num)] = rem_tiles[index]
+                        index += 1
+                elif direction == 'd':
+                    index = 5 - len(rem_tiles)
+                    rem_index = 0
+                    for tile in rem_tiles:
+                        new_col[(index, col_num)] = rem_tiles[rem_index]
+                        index += 1
+                        rem_index += 1
 
                 for key in new_col:
                     new_pos[key] = new_col[key]
