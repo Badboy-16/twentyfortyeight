@@ -143,7 +143,47 @@ class Board:
 
                 for key in new_col:
                     new_pos[key] = new_col[key]
-            return new_pos
+
+        elif direction == 'l' or direction == 'r':
+             for row_num in range(1, 5):
+                tiles = list()
+                for key in self.position:
+                    if key[0] == row_num and self.position[key] != 0:
+                        tiles.append(self.position[key])
+
+                index = 0
+                for tile in tiles:
+                    if index < len(tiles) - 1 and tile != 0:
+                        next_tile = tiles[index + 1]
+                        if tile == next_tile:
+                            tiles[index + 1] = 0
+                            tiles[index] *= 2
+                    index += 1
+
+                rem_tiles = [tile for tile in tiles if tile != 0]
+
+                new_row = {(row_num, 1): 0,
+                           (row_num, 2): 0,
+                           (row_num, 3): 0,
+                           (row_num, 4): 0}
+
+                if direction == 'l':
+                    index = 0
+                    for tile in rem_tiles:
+                        new_row[(row_num, index + 1)] = rem_tiles[index]
+                        index += 1
+                elif direction == 'r':
+                    index = 5 - len(rem_tiles)
+                    rem_index = 0
+                    for tile in rem_tiles:
+                        new_row[(row_num, index)] = rem_tiles[rem_index]
+                        index += 1
+                        rem_index += 1
+
+                for key in new_row:
+                    new_pos[key] = new_row[key]
+
+        return new_pos
 
 
     def move_is_valid(self, direction):
