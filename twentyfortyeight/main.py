@@ -1,3 +1,4 @@
+import os
 from random import randint
 
 class Board:
@@ -213,6 +214,7 @@ def main():
     board = Board()
     running = True
     while running:
+        os.system('clear' if os.name == 'posix' else 'cls')
         print(board)
         board.turn()
 
