@@ -102,6 +102,9 @@ class Board:
 
 
     def move(self, direction):
+        new_pos = dict()
+        for key in self.position:
+            new_pos[key] = self.position[key]
         if direction == 'u':
             for col_num in range(1, 5):
                 tiles = list()
@@ -118,9 +121,7 @@ class Board:
                             tiles[index] *= 2
                     index += 1
 
-                print(tiles)
                 rem_tiles = [tile for tile in tiles if tile != 0]
-                print(rem_tiles)
 
                 new_col = {(1, col_num): 0,
                            (2, col_num): 0,
@@ -130,15 +131,32 @@ class Board:
                 for tile in rem_tiles:
                     new_col[(index + 1, col_num)] = rem_tiles[index]
                     index += 1
-                print(new_col)
+
                 for key in new_col:
-                    self.position[key] = new_col[key]
-            self.gen_rand_tile()
-        pass
+                    new_pos[key] = new_col[key]
+            return new_pos
 
 
     def move_is_valid(self, direction):
-        pass
+        old = self.position
+        new = self.move(direction)
+        if old == new:
+            return False
+        else:
+            return True
+
+
+    def turn(self):
+        valid_move = False
+        while valid_move == False:
+            direction = input()
+            if self.move_is_valid(direction) == False:
+                print("Invalid move")
+                continue
+            else:
+                valid_move = True
+        self.position = self.move(direction)
+        self.gen_rand_tile()
 
 
 def main():
@@ -147,7 +165,5 @@ def main():
     running = True
     while running:
         print(board)
-        move = input()
-        if move == 'u':
-            board.move('u')
+        board.turn()
 
