@@ -1,5 +1,4 @@
 import os
-from pynput import keyboard
 from random import randint
 
 class Board:
@@ -208,10 +207,6 @@ class Board:
                 valid_move = True
         self.position = self.move(direction)
         self.gen_rand_tile()
-
-
-    def detect_input(self):
-        pass
 
 
 def main():
