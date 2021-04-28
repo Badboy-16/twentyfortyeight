@@ -20,6 +20,8 @@ class Board:
                          (3, 1): 0, (3, 2): 0, (3, 3): 0, (3, 4): 0,
                          (4, 1): 0, (4, 2): 0, (4, 3): 0, (4, 4): 0}
         self.game_over = False
+        self.score = 0
+        self.score_add = 0
 
         # Generate starting positions for the two 2 tiles.
         pos_one, pos_two = self.gen_starting_pos()
@@ -29,7 +31,7 @@ class Board:
 
     def __str__(self):
         """
-        Visual representatio of the game board in command line.
+        Visual representation of the game board and the score in command line.
         """
 
         tiles = list()
@@ -45,6 +47,8 @@ class Board:
         {tiles[8]:>5} {tiles[9]:>5} {tiles[10]:>5} {tiles[11]:>5}
 
         {tiles[12]:>5} {tiles[13]:>5} {tiles[14]:>5} {tiles[15]:>5}
+
+        Score: {self.score:> 10}
         """
         return board_repr
 
@@ -114,13 +118,14 @@ class Board:
                         tiles.append(self.position[key])
 
                 index = 0
-                for tile in tiles:
-                    if index < len(tiles) - 1 and tile != 0:
-                        next_tile = tiles[index + 1]
-                        if tile == next_tile:
-                            tiles[index + 1] = 0
-                            tiles[index] *= 2
-                    index += 1
+                while index < len(tiles) - 1:
+                    if tiles[index] == tiles[index + 1]:
+                        tiles[index + 1] = 0
+                        tiles[index] *= 2
+                        self.score_add = tiles[index]
+                        index += 2
+                    else:
+                        index += 1
 
                 rem_tiles = [tile for tile in tiles if tile != 0]
 
@@ -206,6 +211,8 @@ class Board:
             else:
                 valid_move = True
         self.position = self.move(direction)
+        self.score += self.score_add
+        self.score_add = 0
         self.gen_rand_tile()
 
 
