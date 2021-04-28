@@ -158,13 +158,14 @@ class Board:
                         tiles.append(self.position[key])
 
                 index = 0
-                for tile in tiles:
-                    if index < len(tiles) - 1 and tile != 0:
-                        next_tile = tiles[index + 1]
-                        if tile == next_tile:
-                            tiles[index + 1] = 0
-                            tiles[index] *= 2
-                    index += 1
+                while index < len(tiles) - 1:
+                    if tiles[index] == tiles[index + 1]:
+                        tiles[index + 1] = 0
+                        tiles[index] *= 2
+                        self.score_add = tiles[index]
+                        index += 2
+                    else:
+                        index += 1
 
                 rem_tiles = [tile for tile in tiles if tile != 0]
 
