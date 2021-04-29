@@ -207,6 +207,13 @@ class Board:
             return True
 
 
+    def is_game_over(self):
+        for direction in ['w', 'a', 's', 'd']:
+            if self.move_is_valid(direction) == True:
+                return False
+        return True
+
+
     def turn(self):
         valid_move = False
         while valid_move == False:
@@ -220,13 +227,13 @@ class Board:
         self.score += self.score_add
         self.score_add = 0
         self.gen_rand_tile()
+        self.game_over = self.is_game_over()
 
 
 def main():
 
     board = Board()
-    running = True
-    while running:
+    while board.game_over == False:
         os.system('clear' if os.name == 'posix' else 'cls')
         print(board)
         board.turn()
