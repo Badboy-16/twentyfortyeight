@@ -21,6 +21,7 @@ class Board:
                          (2, 1): 0, (2, 2): 0, (2, 3): 0, (2, 4): 0,
                          (3, 1): 0, (3, 2): 0, (3, 3): 0, (3, 4): 0,
                          (4, 1): 0, (4, 2): 0, (4, 3): 0, (4, 4): 0}
+        self.win = False
         self.game_over = False
         self.score = 0
         self.score_add = 0
@@ -207,6 +208,12 @@ class Board:
             return True
 
 
+    def player_win(self):
+        for key in self.position:
+            if self.position[key] == 2048:
+                return True
+        return False
+
     def is_game_over(self):
         for direction in ['w', 'a', 's', 'd']:
             if self.move_is_valid(direction) == True:
@@ -227,14 +234,19 @@ class Board:
         self.score += self.score_add
         self.score_add = 0
         self.gen_rand_tile()
+        self.win = self.player_win()
         self.game_over = self.is_game_over()
 
 
 def main():
 
     board = Board()
-    while board.game_over == False:
+    while board.game_over == False and board.win == False:
         os.system('clear' if os.name == 'posix' else 'cls')
         print(board)
         board.turn()
+    if board.game_over == True:
+        print("Game over!")
+    elif board.win == True:
+        print("You win!")
 
