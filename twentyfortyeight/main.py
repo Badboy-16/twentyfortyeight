@@ -1,4 +1,6 @@
 import os
+import sys
+
 from random import randint
 
 class Board:
@@ -189,6 +191,9 @@ class Board:
 
                 for key in new_row:
                     new_pos[key] = new_row[key]
+
+        elif direction == 'exit':
+            sys.exit()
 
         return new_pos
 
