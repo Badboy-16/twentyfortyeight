@@ -17,19 +17,18 @@ class Board:
         empty.
         """
 
-        self.position = {(1, 1): 0, (1, 2): 0, (1, 3): 0, (1, 4): 0,
-                         (2, 1): 0, (2, 2): 0, (2, 3): 0, (2, 4): 0,
-                         (3, 1): 0, (3, 2): 0, (3, 3): 0, (3, 4): 0,
-                         (4, 1): 0, (4, 2): 0, (4, 3): 0, (4, 4): 0}
+        self.pos = {(1, 1): 0, (1, 2): 0, (1, 3): 0, (1, 4): 0,
+                    (2, 1): 0, (2, 2): 0, (2, 3): 0, (2, 4): 0,
+                    (3, 1): 0, (3, 2): 0, (3, 3): 0, (3, 4): 0,
+                    (4, 1): 0, (4, 2): 0, (4, 3): 0, (4, 4): 0}
         self.win = False
         self.game_over = False
         self.score = 0
         self.score_add = 0
 
         # Generate starting positions for the two 2 tiles.
-        pos_one, pos_two = self.gen_starting_pos()
-        self.position[pos_one] = 2
-        self.position[pos_two] = 2
+        pos_one, pos_two = self.gen_start_pos()
+        self.pos[pos_one] = self.pos[pos_two] = 2
 
 
     def __str__(self):
@@ -38,7 +37,7 @@ class Board:
         """
 
         tiles = list()
-        for value in self.position.values():
+        for value in self.pos.values():
             tiles.append(value)
         for value in tiles:
             value = str(value)
@@ -56,19 +55,18 @@ class Board:
         return board_repr
 
 
-    def gen_starting_pos(self):
+    def gen_start_pos(self):
         """
         Generate the starting position of the two "2" tiles.
         """
 
-        valid_pos = False
-        while valid_pos == False:
-            pos_one_x = randint(1, 4)
-            pos_one_y = randint(1, 4)
-            pos_two_x = randint(1, 4)
-            pos_two_y = randint(1, 4)
-            pos_one = (pos_one_x, pos_one_y)
-            pos_two = (pos_two_x, pos_two_y)
+        while True:
+            one_x = randint(1, 4)
+            one_y = randint(1, 4)
+            two_x = randint(1, 4)
+            two_y = randint(1, 4)
+            pos_one = (one_x, one_y)
+            pos_two = (two_x, two_y)
             if pos_one != pos_two:
                 return pos_one, pos_two
             else:
@@ -80,8 +78,8 @@ class Board:
         """Return a list of tiles that are empty."""
 
         empty_tiles = list()
-        for key in self.position:
-            if self.position[key] == 0:
+        for key in self.pos:
+            if self.pos[key] == 0:
                 empty_tiles.append(key)
         return empty_tiles
 
@@ -91,8 +89,8 @@ class Board:
         """Return a list of tiles that are not empty."""
 
         occupied_tiles = list()
-        for key in self.position:
-            if self.position[key] != 0:
+        for key in self.pos:
+            if self.pos[key] != 0:
                 occupied_tiles.append(key)
         return occupied_tiles
 
@@ -106,19 +104,19 @@ class Board:
         empty_tiles = self.get_empty_tiles()
         rand_value = num_list[randint(0, len(num_list) - 1)]
         rand_tile_pos = empty_tiles[randint(0, len(empty_tiles) - 1)]
-        self.position[rand_tile_pos] = rand_value
+        self.pos[rand_tile_pos] = rand_value
 
 
     def move(self, direction):
         new_pos = dict()
-        for key in self.position:
-            new_pos[key] = self.position[key]
+        for key in self.pos:
+            new_pos[key] = self.pos[key]
         if direction == 'w' or direction == 's':
             for col_num in range(1, 5):
                 tiles = list()
-                for key in self.position:
-                    if key[1] == col_num and self.position[key] != 0:
-                        tiles.append(self.position[key])
+                for key in self.pos:
+                    if key[1] == col_num and self.pos[key] != 0:
+                        tiles.append(self.pos[key])
 
                 index = 0
                 while index < len(tiles) - 1:
@@ -132,10 +130,7 @@ class Board:
 
                 rem_tiles = [tile for tile in tiles if tile != 0]
 
-                new_col = {(1, col_num): 0,
-                           (2, col_num): 0,
-                           (3, col_num): 0,
-                           (4, col_num): 0}
+                new_col = {(row, col_num): 0 for row in range(1, 5)}
 
                 if direction == 'w':
                     index = 0
@@ -156,9 +151,9 @@ class Board:
         elif direction == 'a' or direction == 'd':
              for row_num in range(1, 5):
                 tiles = list()
-                for key in self.position:
-                    if key[0] == row_num and self.position[key] != 0:
-                        tiles.append(self.position[key])
+                for key in self.pos:
+                    if key[0] == row_num and self.pos[key] != 0:
+                        tiles.append(self.pos[key])
 
                 index = 0
                 while index < len(tiles) - 1:
@@ -172,10 +167,7 @@ class Board:
 
                 rem_tiles = [tile for tile in tiles if tile != 0]
 
-                new_row = {(row_num, 1): 0,
-                           (row_num, 2): 0,
-                           (row_num, 3): 0,
-                           (row_num, 4): 0}
+                new_row = {(row_num, col): 0 for col in range(1, 5)}
 
                 if direction == 'a':
                     index = 0
@@ -200,7 +192,7 @@ class Board:
 
 
     def move_is_valid(self, direction):
-        old = self.position
+        old = self.pos
         new = self.move(direction)
         if old == new:
             return False
@@ -209,8 +201,8 @@ class Board:
 
 
     def player_win(self):
-        for key in self.position:
-            if self.position[key] == 2048:
+        for key in self.pos:
+            if self.pos[key] == 2048:
                 return True
         return False
 
@@ -230,7 +222,7 @@ class Board:
                 continue
             else:
                 valid_move = True
-        self.position = self.move(direction)
+        self.pos = self.move(direction)
         self.score += self.score_add
         self.score_add = 0
         self.gen_rand_tile()
