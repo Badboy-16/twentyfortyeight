@@ -186,7 +186,7 @@ class Board:
                 for key in new_row:
                     new_pos[key] = new_row[key]
         elif direction == 'exit':
-            sys.exit()
+            exit()
         return new_pos
 
     def move_is_valid(self, direction):
