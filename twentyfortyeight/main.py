@@ -36,18 +36,22 @@ class Board:
         """
         tiles = list()
         for value in self.pos.values():
-            tiles.append(value)
+            if value == 0:
+                tiles.append(' ')
+            else:
+                tiles.append(value)
         for value in tiles:
             value = str(value)
         board_repr = f"""
-        {tiles[0]:>5} {tiles[1]:>5} {tiles[2]:>5} {tiles[3]:>5}
-
-        {tiles[4]:>5} {tiles[5]:>5} {tiles[6]:>5} {tiles[7]:>5}
-
-        {tiles[8]:>5} {tiles[9]:>5} {tiles[10]:>5} {tiles[11]:>5}
-
-        {tiles[12]:>5} {tiles[13]:>5} {tiles[14]:>5} {tiles[15]:>5}
-
+        ---------------------------------
+        | {tiles[0]:>5} | {tiles[1]:>5} | {tiles[2]:>5} | {tiles[3]:>5} |
+        ---------------------------------
+        | {tiles[4]:>5} | {tiles[5]:>5} | {tiles[6]:>5} | {tiles[7]:>5} |
+        ---------------------------------
+        | {tiles[8]:>5} | {tiles[9]:>5} | {tiles[10]:>5} | {tiles[11]:>5} |
+        ---------------------------------
+        | {tiles[12]:>5} | {tiles[13]:>5} | {tiles[14]:>5} | {tiles[15]:>5} |
+        ---------------------------------
         Score: {self.score:> 10}
         """
         return board_repr
