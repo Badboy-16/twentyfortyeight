@@ -1,6 +1,6 @@
 import os
 import sys
-from random import randint
+from sys import exit as quit_game
 
 class Board:
 
@@ -186,7 +186,7 @@ class Board:
                 for key in new_row:
                     new_pos[key] = new_row[key]
         elif direction == 'exit':
-            sys.exit()
+            quit_game()
         return new_pos
 
     def move_is_valid(self, direction):
