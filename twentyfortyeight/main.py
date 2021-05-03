@@ -2,6 +2,8 @@ import os
 from random import randint
 from sys import exit as quit_game
 
+from rich import print
+
 class Board:
 
     def __init__(self):
@@ -27,30 +29,58 @@ class Board:
         pos_one, pos_two = self.gen_start_pos()
         self.pos[pos_one] = self.pos[pos_two] = 2
 
-    def __str__(self):
+    def represent(self):
         """
         Visual representation of the game board and the score in command line.
 
         :return: the visual representation of the board in 4x4
         :rtype: str
         """
-        tiles = list()
+        # Colours of different tiles
+        c = {
+            ' ': '#ffffff',
+            2: '#ffffff',
+            4: '#fcf3f2',
+            8: '#fce7e7',
+            16: '#fcd6d3',
+            32: '#eaaad9',
+            64: '#d683c3',
+            128: '#cb5ab0',
+            256: '#c12d9f',
+            512: '#ced1f6',
+            1024: '#e7e6fb',
+            2048: '#f3f4fd'
+        }
+        # List of tiles
+        t = list()
         for value in self.pos.values():
             if value == 0:
-                tiles.append(' ')
+                t.append(' ')
             else:
-                tiles.append(value)
-        for value in tiles:
+                t.append(value)
+        for value in t:
             value = str(value)
         board_repr = f"""
         ---------------------------------
-        | {tiles[0]:>5} | {tiles[1]:>5} | {tiles[2]:>5} | {tiles[3]:>5} |
+        | [{c[t[0]]}]{t[0]:>5}[/{c[t[0]]}] """ \
+        f"""| [{c[t[1]]}]{t[1]:>5}[/{c[t[1]]}] """ \
+        f"""| [{c[t[2]]}]{t[2]:>5}[/{c[t[2]]}] """ \
+        f"""| [{c[t[3]]}]{t[3]:>5}[/{c[t[3]]}] |
         ---------------------------------
-        | {tiles[4]:>5} | {tiles[5]:>5} | {tiles[6]:>5} | {tiles[7]:>5} |
+        | [{c[t[4]]}]{t[4]:>5}[/{c[t[4]]}] """ \
+        f"""| [{c[t[5]]}]{t[5]:>5}[/{c[t[5]]}] """ \
+        f"""| [{c[t[6]]}]{t[6]:>5}[/{c[t[6]]}] """ \
+        f"""| [{c[t[7]]}]{t[7]:>5}[/{c[t[7]]}] |
         ---------------------------------
-        | {tiles[8]:>5} | {tiles[9]:>5} | {tiles[10]:>5} | {tiles[11]:>5} |
+        | [{c[t[8]]}]{t[8]:>5}[/{c[t[8]]}] """ \
+        f"""| [{c[t[9]]}]{t[9]:>5}[/{c[t[9]]}] """ \
+        f"""| [{c[t[10]]}]{t[10]:>5}[/{c[t[10]]}] """ \
+        f"""| [{c[t[11]]}]{t[11]:>5}[/{c[t[11]]}] |
         ---------------------------------
-        | {tiles[12]:>5} | {tiles[13]:>5} | {tiles[14]:>5} | {tiles[15]:>5} |
+        | [{c[t[12]]}]{t[12]:>5}[/{c[t[12]]}] """ \
+        f"""| [{c[t[13]]}]{t[13]:>5}[/{c[t[13]]}] """ \
+        f"""| [{c[t[14]]}]{t[14]:>5}[/{c[t[14]]}] """ \
+        f"""| [{c[t[15]]}]{t[15]:>5}[/{c[t[15]]}] |
         ---------------------------------
         Score: {self.score:> 10}
         """
@@ -260,7 +290,7 @@ def main():
     board = Board()
     while board.game_over == False and board.win == False:
         os.system('clear' if os.name == 'posix' else 'cls')
-        print(board)
+        print(board.represent())
         board.turn()
     if board.game_over == True:
         print("Game over!")
