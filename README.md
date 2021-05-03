@@ -1,4 +1,7 @@
 # twentyfortyeight
+![GitHub](https://img.shields.io/github/license/Badboy-16/twentyfortyeight)
+![Lines of code](https://img.shields.io/tokei/lines/github/Badboy-16/twentyfortyeight)
+
 A command line 2048 game written in Python
 
 ## Installation
