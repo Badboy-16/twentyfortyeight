@@ -1,5 +1,5 @@
 import os
-import sys
+from random import randint
 from sys import exit as quit_game
 
 class Board:
