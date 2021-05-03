@@ -13,5 +13,10 @@ Press "W", "A", "S", or "D" and press "Enter"/"Return" to move the tiles on the 
 ## How to contribute
 Contributions are welcomed. Please refer to [CONTRIBUTING.MD](https://github.com/Badboy-16/twentyfortyeight/blob/main/CONTRIBUTING.md) for details.
 
+## Thanks
+Thanks to these contributors who helped with this project.
+
+[AliHaider20](https://github.com/AliHaider20)
+
 ## License
 This game is licensed under GPL-v3. Please refer to [LICENSE](https://github.com/Badboy-16/twentyfortyeight/blob/main/LICENSE) for more details.
