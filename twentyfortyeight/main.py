@@ -1,3 +1,4 @@
+from datetime import datetime
 from os import environ as env, name as os_nm, path, system
 from random import randint
 import sqlite3
@@ -5,9 +6,11 @@ from sys import exit as quit_game
 
 from rich import print
 
+
 home = str(env['HOME']) if os_nm == 'posix' else str(env['USERPROFILE'])
 # Path to the high score database
 hs_path = path.join(home, '.twentyfortyeight_hs.sqlite')
+
 
 CREATE_TABLE_QUERY = """CREATE TABLE IF NOT EXISTS highscore (
     id INTEGER PRIMARY KEY AUTOINCREMENT,
@@ -19,7 +22,7 @@ CREATE_TABLE_QUERY = """CREATE TABLE IF NOT EXISTS highscore (
 """
 
 READ_HS_QUERY = "SELECT * FROM highscore LIMIT 10"
-# WRITE_HS_QUERY = pass
+
 
 class Board:
 
@@ -41,6 +44,7 @@ class Board:
         self.game_over = False
         self.score = 0
         self.score_add = 0
+        self.moves = 0
 
         # Generate starting positions for the two 2 tiles.
         pos_one, pos_two = self.gen_start_pos()
@@ -233,9 +237,23 @@ class Board:
                 for key in new_row:
                     new_pos[key] = new_row[key]
         elif direction == 'exit':
+            pl_name = input("Input your name on the leaderboard: ")
+            today = datetime.today().strftime('%Y-%m-%d')
+            connection = sqlite3.connect(hs_path)
+            cursor = connection.cursor()
+            write_query = f"""
+                INSERT INTO
+                    highscore (player, score, moves, date)
+                VALUES
+                    ('{pl_name}', '{self.score}', '{self.moves}', '{today}');
+                """
+            cursor.execute(write_query)
+            connection.commit()
             quit_game()
         elif direction == 'hs':
-            print(show_hs())
+            print(column_names())
+            for record in show_hs():
+                print(record)
             input("Press Enter to continue")
         return new_pos
 
@@ -264,7 +282,9 @@ class Board:
         :rtype: bool
         """
         for key in self.pos:
-            if self.pos[key] == 2048:
+            if self.pos[key] == 8:
+                system('clear' if os_nm == 'posix' else 'cls')
+                print(self.represent())
                 return True
         return False
 
@@ -300,10 +320,11 @@ class Board:
         self.pos = self.move(direction)
         self.score += self.score_add
         self.score_add = 0
-        if direction in ['w', 'a', 's', 'd']:
-            self.gen_rand_tile()
         self.win = self.player_win()
         self.game_over = self.is_game_over()
+        if direction in ['w', 'a', 's', 'd']:
+            self.gen_rand_tile()
+            self.moves += 1
 
 
 def create_table():
@@ -319,9 +340,13 @@ def show_hs():
     hs = cursor.fetchall()
     return hs
 
-def write_hs(connection):
-    pass
-
+def column_names():
+    connection = sqlite3.connect(hs_path)
+    cursor = connection.cursor()
+    cursor.execute(READ_HS_QUERY)
+    cursor.fetchall()
+    col_names = [description[0] for description in cursor.description]
+    return tuple(col_names)
 
 def main():
     """
@@ -337,5 +362,16 @@ def main():
         print("Game over!")
     elif board.win == True:
         print("You win!")
-    write_hs()
+    pl_name = input("Input your name on the leaderboard: ")
+    today = datetime.today().strftime('%Y-%m-%d')
+    connection = sqlite3.connect(hs_path)
+    cursor = connection.cursor()
+    write_query = f"""
+        INSERT INTO
+            highscore (player, score, moves, date)
+        VALUES
+            ('{pl_name}', '{board.score}', '{board.moves}', '{today}');
+        """
+    cursor.execute(write_query)
+    connection.commit()
 
