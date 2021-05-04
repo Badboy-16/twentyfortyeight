@@ -1,8 +1,21 @@
-import os
+from os import environ as env, name as os_nm, path, system
 from random import randint
+import sqlite3
 from sys import exit as quit_game
 
 from rich import print
+
+CREATE_TABLE_QUERY = """CREATE TABLE IF NOT EXISTS highscore (
+    id INTEGER PRIMARY KEY AUTOINCREMENT,
+    player TEXT NOT NULL,
+    score INTEGER NOT NULL,
+    moves INTEGER NOT NULL,
+    date DATE NOT NULL
+);
+"""
+
+# READ_HS_QUERY = pass
+# WRITE_HS_QUERY = pass
 
 class Board:
 
@@ -217,6 +230,8 @@ class Board:
                     new_pos[key] = new_row[key]
         elif direction == 'exit':
             quit_game()
+        elif direction == 'hs':
+            show_hs()
         return new_pos
 
     def move_is_valid(self, direction):
@@ -283,17 +298,35 @@ class Board:
         self.game_over = self.is_game_over()
 
 
+def create_table(connection):
+    cursor = connection.cursor()
+    cursor.execute(CREATE_TABLE_QUERY)
+    connection.commit()
+
+def show_hs(connection):
+    pass
+
+def write_hs(connection):
+    pass
+
+
 def main():
     """
     Main loop of the game.
     """
+    home = str(env['HOME']) if os_nm == 'posix' else str(env['USERPROFILE'])
+    # Path to the high score database
+    hs_path = path.join(home, '.twentyfortyeight_hs.sqlite')
+    connection = sqlite3.connect(hs_path)
+    create_table(connection)
     board = Board()
     while board.game_over == False and board.win == False:
-        os.system('clear' if os.name == 'posix' else 'cls')
+        system('clear' if os_nm == 'posix' else 'cls')
         print(board.represent())
         board.turn()
     if board.game_over == True:
         print("Game over!")
     elif board.win == True:
         print("You win!")
+    write_hs()
 
