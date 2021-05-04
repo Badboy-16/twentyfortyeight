@@ -242,13 +242,13 @@ class Board:
             today = datetime.today().strftime('%Y-%m-%d')
             connection = sqlite3.connect(hs_path)
             cursor = connection.cursor()
-            write_query = f"""
-                INSERT INTO
-                    highscore (player, score, moves, date)
-                VALUES
-                    ('{pl_name}', '{self.score}', '{self.moves}', '{today}');
-                """
-            cursor.execute(write_query)
+            cursor.execute(f"""
+                           INSERT INTO
+                           highscore (player, score, moves, date)
+                           VALUES
+                           (?, ?, ?, ?);""",
+                           (pl_name , self.score, self.moves, today)
+                          )
             connection.commit()
             quit_game()
         elif direction == 'hs':
@@ -367,12 +367,12 @@ def main():
     today = datetime.today().strftime('%Y-%m-%d')
     connection = sqlite3.connect(hs_path)
     cursor = connection.cursor()
-    write_query = f"""
-        INSERT INTO
-            highscore (player, score, moves, date)
-        VALUES
-            ('{pl_name}', '{board.score}', '{board.moves}', '{today}');
-        """
+    cursor.execute(f"""
+                   INSERT INTO
+                   highscore (player, score, moves, date)
+                   VALUES
+                   (?, ?, ?, ?);""", (pl_name , self.score, self.moves, today)
+                  )
     cursor.execute(write_query)
     connection.commit()
 
