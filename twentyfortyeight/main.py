@@ -124,8 +124,7 @@ class Board:
             pos_two = (two_x, two_y)
             if pos_one != pos_two:
                 return pos_one, pos_two
-            else:
-                continue
+            continue
 
     def get_empty_tiles(self):
         """
