@@ -1,5 +1,6 @@
 # twentyfortyeight
 ![GitHub](https://img.shields.io/github/license/Badboy-16/twentyfortyeight)
+![CodeFactor Grade](https://img.shields.io/codefactor/grade/github/badboy-16/twentyfortyeight/main)
 ![Lines of code](https://img.shields.io/tokei/lines/github/Badboy-16/twentyfortyeight)
 
 A command line 2048 game written in Python
