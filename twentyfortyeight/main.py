@@ -376,4 +376,3 @@ def main():
                   )
     cursor.execute(write_query)
     connection.commit()
-
