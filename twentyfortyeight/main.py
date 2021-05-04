@@ -272,8 +272,7 @@ class Board:
         new = self.move(direction)
         if old == new:
             return False
-        else:
-            return True
+        return True
 
     def player_win(self):
         """
