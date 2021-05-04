@@ -5,6 +5,10 @@ from sys import exit as quit_game
 
 from rich import print
 
+home = str(env['HOME']) if os_nm == 'posix' else str(env['USERPROFILE'])
+# Path to the high score database
+hs_path = path.join(home, '.twentyfortyeight_hs.sqlite')
+
 CREATE_TABLE_QUERY = """CREATE TABLE IF NOT EXISTS highscore (
     id INTEGER PRIMARY KEY AUTOINCREMENT,
     player TEXT NOT NULL,
@@ -14,7 +18,7 @@ CREATE_TABLE_QUERY = """CREATE TABLE IF NOT EXISTS highscore (
 );
 """
 
-# READ_HS_QUERY = pass
+READ_HS_QUERY = "SELECT * FROM highscore LIMIT 10"
 # WRITE_HS_QUERY = pass
 
 class Board:
@@ -231,7 +235,8 @@ class Board:
         elif direction == 'exit':
             quit_game()
         elif direction == 'hs':
-            show_hs()
+            print(show_hs())
+            input("Press Enter to continue")
         return new_pos
 
     def move_is_valid(self, direction):
@@ -242,6 +247,8 @@ class Board:
         :return: whether the move is valid
         :rtype: bool
         """
+        if direction not in ['w', 'a', 's', 'd']:
+            return True
         old = self.pos
         new = self.move(direction)
         if old == new:
@@ -293,18 +300,24 @@ class Board:
         self.pos = self.move(direction)
         self.score += self.score_add
         self.score_add = 0
-        self.gen_rand_tile()
+        if direction in ['w', 'a', 's', 'd']:
+            self.gen_rand_tile()
         self.win = self.player_win()
         self.game_over = self.is_game_over()
 
 
-def create_table(connection):
+def create_table():
+    connection = sqlite3.connect(hs_path)
     cursor = connection.cursor()
     cursor.execute(CREATE_TABLE_QUERY)
     connection.commit()
 
-def show_hs(connection):
-    pass
+def show_hs():
+    connection = sqlite3.connect(hs_path)
+    cursor = connection.cursor()
+    cursor.execute(READ_HS_QUERY)
+    hs = cursor.fetchall()
+    return hs
 
 def write_hs(connection):
     pass
@@ -314,11 +327,7 @@ def main():
     """
     Main loop of the game.
     """
-    home = str(env['HOME']) if os_nm == 'posix' else str(env['USERPROFILE'])
-    # Path to the high score database
-    hs_path = path.join(home, '.twentyfortyeight_hs.sqlite')
-    connection = sqlite3.connect(hs_path)
-    create_table(connection)
+    create_table()
     board = Board()
     while board.game_over == False and board.win == False:
         system('clear' if os_nm == 'posix' else 'cls')
