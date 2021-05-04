@@ -1,7 +1,8 @@
 from datetime import datetime
-from os import environ as env, name as os_nm, path, system
+from os import environ as env, name as os_nm, path
 from random import randint
 import sqlite3
+from subprocess import call as sp_call
 from sys import exit as quit_game
 
 from rich import print
@@ -241,13 +242,14 @@ class Board:
             today = datetime.today().strftime('%Y-%m-%d')
             connection = sqlite3.connect(hs_path)
             cursor = connection.cursor()
-            write_query = f"""
-                INSERT INTO
-                    highscore (player, score, moves, date)
-                VALUES
-                    ('{pl_name}', '{self.score}', '{self.moves}', '{today}');
-                """
-            cursor.execute(write_query)
+            query_tuple = (pl_name, self.score, self.moves, today,)
+            cursor.execute(f"""
+                           INSERT INTO
+                           highscore (player, score, moves, date)
+                           VALUES
+                           (?, ?, ?, ?);""",
+                           query_tuple
+                          )
             connection.commit()
             quit_game()
         elif direction == 'hs':
@@ -282,8 +284,8 @@ class Board:
         :rtype: bool
         """
         for key in self.pos:
-            if self.pos[key] == 8:
-                system('clear' if os_nm == 'posix' else 'cls')
+            if self.pos[key] == 2048:
+                sp_call('clear' if os_nm == 'posix' else 'cls', shell=False)
                 print(self.represent())
                 return True
         return False
@@ -355,7 +357,7 @@ def main():
     create_table()
     board = Board()
     while board.game_over == False and board.win == False:
-        system('clear' if os_nm == 'posix' else 'cls')
+        sp_call('clear' if os_nm == 'posix' else 'cls', shell=False)
         print(board.represent())
         board.turn()
     if board.game_over == True:
@@ -366,12 +368,13 @@ def main():
     today = datetime.today().strftime('%Y-%m-%d')
     connection = sqlite3.connect(hs_path)
     cursor = connection.cursor()
-    write_query = f"""
-        INSERT INTO
-            highscore (player, score, moves, date)
-        VALUES
-            ('{pl_name}', '{board.score}', '{board.moves}', '{today}');
-        """
+    cursor.execute(f"""
+                   INSERT INTO
+                   highscore (player, score, moves, date)
+                   VALUES
+                   (?, ?, ?, ?);""",
+                   query_tuple
+                  )
     cursor.execute(write_query)
     connection.commit()
 
