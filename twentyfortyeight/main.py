@@ -5,7 +5,7 @@ import sqlite3
 from subprocess import call as sp_call
 from sys import exit as quit_game
 
-from rich import print
+from rich import print as rprint
 
 
 home = str(env['HOME']) if os_nm == 'posix' else str(env['USERPROFILE'])
@@ -124,8 +124,7 @@ class Board:
             pos_two = (two_x, two_y)
             if pos_one != pos_two:
                 return pos_one, pos_two
-            else:
-                continue
+            continue
 
     def get_empty_tiles(self):
         """
@@ -273,8 +272,7 @@ class Board:
         new = self.move(direction)
         if old == new:
             return False
-        else:
-            return True
+        return True
 
     def player_win(self):
         """
@@ -298,7 +296,7 @@ class Board:
         :rtype: bool
         """
         for direction in ['w', 'a', 's', 'd']:
-            if self.move_is_valid(direction) == True:
+            if self.move_is_valid(direction) is True:
                 return False
         return True
 
@@ -312,9 +310,9 @@ class Board:
         needed, end the game by checking self.win and self.game_over
         """
         valid_move = False
-        while valid_move == False:
+        while valid_move is False:
             direction = input()
-            if self.move_is_valid(direction) == False:
+            if self.move_is_valid(direction) is False:
                 print("Invalid move")
                 continue
             else:
@@ -356,13 +354,13 @@ def main():
     """
     create_table()
     board = Board()
-    while board.game_over == False and board.win == False:
+    while board.game_over is False and board.win is False:
         sp_call('clear' if os_nm == 'posix' else 'cls', shell=False)
-        print(board.represent())
+        rprint(board.represent())
         board.turn()
-    if board.game_over == True:
+    if board.game_over is True:
         print("Game over!")
-    elif board.win == True:
+    elif board.win is True:
         print("You win!")
     pl_name = input("Input your name on the leaderboard: ")
     today = datetime.today().strftime('%Y-%m-%d')
@@ -377,4 +375,3 @@ def main():
                   )
     cursor.execute(write_query)
     connection.commit()
-
