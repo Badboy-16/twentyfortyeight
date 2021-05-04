@@ -5,7 +5,7 @@ import sqlite3
 from subprocess import call as sp_call
 from sys import exit as quit_game
 
-from rich import print
+from rich import print as rprint
 
 
 home = str(env['HOME']) if os_nm == 'posix' else str(env['USERPROFILE'])
@@ -357,7 +357,7 @@ def main():
     board = Board()
     while board.game_over is False and board.win is False:
         sp_call('clear' if os_nm == 'posix' else 'cls', shell=False)
-        print(board.represent())
+        rprint(board.represent())
         board.turn()
     if board.game_over is True:
         print("Game over!")
