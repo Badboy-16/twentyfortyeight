@@ -242,12 +242,13 @@ class Board:
             today = datetime.today().strftime('%Y-%m-%d')
             connection = sqlite3.connect(hs_path)
             cursor = connection.cursor()
+            query_tuple = (pl_name, self.score, self.moves, today,)
             cursor.execute(f"""
                            INSERT INTO
                            highscore (player, score, moves, date)
                            VALUES
                            (?, ?, ?, ?);""",
-                           (pl_name , self.score, self.moves, today)
+                           query_tuple
                           )
             connection.commit()
             quit_game()
@@ -371,7 +372,8 @@ def main():
                    INSERT INTO
                    highscore (player, score, moves, date)
                    VALUES
-                   (?, ?, ?, ?);""", (pl_name , self.score, self.moves, today)
+                   (?, ?, ?, ?);""",
+                   query_tuple
                   )
     cursor.execute(write_query)
     connection.commit()
