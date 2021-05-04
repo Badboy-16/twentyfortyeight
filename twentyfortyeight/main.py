@@ -297,7 +297,7 @@ class Board:
         :rtype: bool
         """
         for direction in ['w', 'a', 's', 'd']:
-            if self.move_is_valid(direction) == True:
+            if self.move_is_valid(direction) is True:
                 return False
         return True
 
@@ -311,9 +311,9 @@ class Board:
         needed, end the game by checking self.win and self.game_over
         """
         valid_move = False
-        while valid_move == False:
+        while valid_move is False:
             direction = input()
-            if self.move_is_valid(direction) == False:
+            if self.move_is_valid(direction) is False:
                 print("Invalid move")
                 continue
             else:
@@ -355,13 +355,13 @@ def main():
     """
     create_table()
     board = Board()
-    while board.game_over == False and board.win == False:
+    while board.game_over is False and board.win is False:
         sp_call('clear' if os_nm == 'posix' else 'cls', shell=False)
         print(board.represent())
         board.turn()
-    if board.game_over == True:
+    if board.game_over is True:
         print("Game over!")
-    elif board.win == True:
+    elif board.win is True:
         print("You win!")
     pl_name = input("Input your name on the leaderboard: ")
     today = datetime.today().strftime('%Y-%m-%d')
