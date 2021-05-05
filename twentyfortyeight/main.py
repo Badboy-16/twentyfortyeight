@@ -370,8 +370,7 @@ def main():
                    INSERT INTO
                    highscore (player, score, moves, date)
                    VALUES
-                   (?, ?, ?, ?);""",
-                   query_tuple
+                   (?, ?, ?, ?);""", query_tuple
                   )
     cursor.execute(write_query)
     connection.commit()
