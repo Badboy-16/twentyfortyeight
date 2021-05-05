@@ -1,7 +1,7 @@
 # twentyfortyeight
 ![GitHub](https://img.shields.io/github/license/Badboy-16/twentyfortyeight)
 ![Lines of code](https://img.shields.io/tokei/lines/github/Badboy-16/twentyfortyeight)
-![CodeFactor Grade](https://img.shields.io/codefactor/grade/github/badboy-16/twentyfortyeight/main)
+[![CodeFactor](https://www.codefactor.io/repository/github/badboy-16/twentyfortyeight/badge)](https://www.codefactor.io/repository/github/badboy-16/twentyfortyeight)
 ![GitHub issues](https://img.shields.io/github/issues/Badboy-16/twentyfortyeight)
 ![GitHub last commit](https://img.shields.io/github/last-commit/Badboy-16/twentyfortyeight)
 
