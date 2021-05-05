@@ -366,11 +366,5 @@ def main():
     today = datetime.today().strftime('%Y-%m-%d')
     connection = sqlite3.connect(hs_path)
     cursor = connection.cursor()
-    cursor.execute(f"""
-                   INSERT INTO
-                   highscore (player, score, moves, date)
-                   VALUES
-                   (?, ?, ?, ?);""", query_tuple
-                  )
-    cursor.execute(write_query)
+    cursor.execute("INSERT INTO highscore (player, score, moves, date) VALUES (?, ?, ?, ?);""", query_tuple)
     connection.commit()
