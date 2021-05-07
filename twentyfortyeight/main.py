@@ -6,6 +6,8 @@ from subprocess import call as sp_call
 from sys import exit as quit_game
 
 from rich import print as rprint
+from rich.console import Console
+from rich.table import Table
 
 
 home = str(env['HOME']) if os_nm == 'posix' else str(env['USERPROFILE'])
@@ -22,7 +24,8 @@ CREATE_TABLE_QUERY = """CREATE TABLE IF NOT EXISTS highscore (
 );
 """
 
-READ_HS_QUERY = "SELECT * FROM highscore LIMIT 10"
+READ_HS_QUERY = "SELECT player, score, date FROM highscore " \
+                "ORDER BY score DESC LIMIT 5"
 
 
 class Board:
@@ -248,11 +251,24 @@ class Board:
             connection.commit()
             quit_game()
         elif direction == 'hs':
-            print(column_names())
-            for record in show_hs():
-                print(record)
+            self.repr_hs(show_hs())
             input("Press Enter to continue")
         return new_pos
+
+    def repr_hs(self, hs):
+        """
+        Print the high score table.
+
+        :param list hs: the list of tuples of high scores records
+        """
+        console = Console()
+        hs_table = Table(show_header=True)
+        hs_table.add_column("Player Name")
+        hs_table.add_column("Score")
+        hs_table.add_column("Date")
+        for record in hs:
+            hs_table.add_row(str(record[0]), str(record[1]), str(record[2]))
+        console.print(hs_table)
 
     def move_is_valid(self, direction):
         """
@@ -336,13 +352,6 @@ def show_hs():
     hs = cursor.fetchall()
     return hs
 
-def column_names():
-    connection = sqlite3.connect(hs_path)
-    cursor = connection.cursor()
-    cursor.execute(READ_HS_QUERY)
-    cursor.fetchall()
-    col_names = [description[0] for description in cursor.description]
-    return tuple(col_names)
 
 def main():
     """
