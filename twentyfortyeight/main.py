@@ -340,12 +340,21 @@ class Board:
 
 
 def create_table():
+    """
+    Create the table in SQLite3 database.
+    """
     connection = sqlite3.connect(hs_path)
     cursor = connection.cursor()
     cursor.execute(CREATE_TABLE_QUERY)
     connection.commit()
 
 def show_hs():
+    """
+    Show the top 5 high score in a table.
+
+    :return: Top 5 high score
+    :rtype: list
+    """
     connection = sqlite3.connect(hs_path)
     cursor = connection.cursor()
     cursor.execute(READ_HS_QUERY)
